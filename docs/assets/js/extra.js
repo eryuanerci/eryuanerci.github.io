@@ -6,9 +6,9 @@
 // 4. 文章统计（字数 / 代码行 / 图片数 / 阅读时长）
 // 5. 页脚自定义信息行（版权 / 建站时间 / 站点地图入口）
 //
-// 注意：站点开启了「即时加载」（navigation.instant），
-// 站内跳转不整页刷新，所以除了首次加载（DOMContentLoaded），
-// 页面切换后（DOMContentSwitch）也要重新初始化一次。
+// 注意：站点开启了「即时加载」（navigation.instant），站内跳转不整页刷新，
+// 脚本不会自动重新执行。这里用 MutationObserver 监听内容区被替换，
+// 替换完成后派发 xuyan:page-switched 事件，通知本脚本和留言区脚本重新初始化。
 // ============================================================
 function initAll() {
   var hero = document.querySelector('.hero-section');
@@ -24,16 +24,25 @@ function initAll() {
 document.addEventListener('DOMContentLoaded', initAll);
 document.addEventListener('xuyan:page-switched', initAll);
 
-// 即时加载（navigation.instant）下，站内跳转不整页刷新，脚本不会自动重新执行，
-// Material 也不会派发页面切换事件。这里用轮询检测地址栏 URL 变化，
-// 变化时派发 xuyan:page-switched 事件，通知本脚本和留言区脚本重新初始化。
-var __xuyanLastUrl = location.href;
-setInterval(function () {
-  if (location.href !== __xuyanLastUrl) {
-    __xuyanLastUrl = location.href;
-    document.dispatchEvent(new CustomEvent('xuyan:page-switched'));
-  }
-}, 400);
+// 即时加载（navigation.instant）下，Material 会用新页面替换「内容区」节点
+// （[data-md-component="container"]）。监听这个节点被替换的那一刻——
+// 此时新页面的内容已经完整就位，再重新初始化才是正确的时机。
+(function watchPageSwitch() {
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      var added = mutations[i].addedNodes;
+      if (!added) continue;
+      for (var j = 0; j < added.length; j++) {
+        var node = added[j];
+        if (node.nodeType === 1 && node.matches && node.matches('[data-md-component="container"]')) {
+          document.dispatchEvent(new CustomEvent('xuyan:page-switched'));
+          return;
+        }
+      }
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
 
 // ----------------------------------------------------------
 // 1. 打字机副标题
