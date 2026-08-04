@@ -140,8 +140,7 @@
   font-size: 1.05rem;
 }
 
-/* 文章底部「上一篇 / 下一篇」导航（构建钩子自动生成） */
-.page-nav {
+/* 文章底部「上一篇 / 下一篇」导航（构建钩子自动生成） */.page-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem 2rem;
@@ -153,6 +152,16 @@
 .page-nav-item {
   display: flex;
   flex-direction: column;
+}
+
+/* 赞助页收款码：限宽、圆角、居中、柔和投影 */
+.sponsor-qr {
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  margin: 0.8rem auto 0.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px var(--content-glass-shadow);
 }
 
 .page-nav-item span {

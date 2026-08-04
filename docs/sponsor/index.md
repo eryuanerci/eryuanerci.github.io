@@ -4,19 +4,13 @@
 
 ## 微信赞赏
 
-<!-- 微信收款码图片：把图片放到 docs/assets/images/ 下，命名为 wechat-pay.png，
-     然后取消下面这一行的注释（删除 <!-- 和 -->），就会显示收款码 -->
+<img class="sponsor-qr" src="../assets/images/wechat-pay.jpg" alt="微信收款码">
 
-![微信收款码](../assets/images/wechat-pay.png)
-
-（这里放你的微信收款码说明）
+（这里放你的微信收款码说明，比如：感谢你的支持！微信扫一扫上面的二维码即可赞助我～）
 
 ## 支付宝赞赏
 
-<!-- 支付宝收款码图片：把图片放到 docs/assets/images/ 下，命名为 alipay.png，
-     然后取消下面这一行的注释，就会显示收款码 -->
-
-![支付宝收款码](../assets/images/alipay.png)
+<img class="sponsor-qr" src="../assets/images/alipay.jpg" alt="支付宝收款码">
 
 （这里放你的支付宝收款码说明）
 
