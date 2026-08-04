@@ -18,6 +18,7 @@
     var content = document.querySelector(".md-content__inner");
     if (!content) return;
     if (content.querySelector(".notfound")) return; // 404 页不加留言区
+    if (content.querySelector(".giscus-frame")) return; // 已注入过，防止重复
 
     var container = document.createElement("div");
     container.style.marginTop = "40px";
@@ -66,13 +67,20 @@
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
-      insertGiscus();
-      watchTheme();
-    });
-  } else {
+  function init() {
     insertGiscus();
     watchTheme();
   }
+
+  // 首次加载时执行一次
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  // 站点开启了「即时加载」（navigation.instant），站内跳转不整页刷新，
+  // 脚本不会重新执行。extra.js 会检测地址栏变化并派发
+  // xuyan:page-switched 事件，这里监听它重新注入留言区
+  document.addEventListener("xuyan:page-switched", init);
 })();

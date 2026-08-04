@@ -5,8 +5,12 @@
 // 3. 动态名牌入口（漂浮，可点击）
 // 4. 文章统计（字数 / 代码行 / 图片数 / 阅读时长）
 // 5. 页脚自定义信息行（版权 / 建站时间 / 站点地图入口）
+//
+// 注意：站点开启了「即时加载」（navigation.instant），
+// 站内跳转不整页刷新，所以除了首次加载（DOMContentLoaded），
+// 页面切换后（DOMContentSwitch）也要重新初始化一次。
 // ============================================================
-document.addEventListener('DOMContentLoaded', function () {
+function initAll() {
   var hero = document.querySelector('.hero-section');
   if (hero) {
     initTypewriter(hero);
@@ -15,7 +19,21 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   injectPageStats();
   injectFooter();
-});
+}
+
+document.addEventListener('DOMContentLoaded', initAll);
+document.addEventListener('xuyan:page-switched', initAll);
+
+// 即时加载（navigation.instant）下，站内跳转不整页刷新，脚本不会自动重新执行，
+// Material 也不会派发页面切换事件。这里用轮询检测地址栏 URL 变化，
+// 变化时派发 xuyan:page-switched 事件，通知本脚本和留言区脚本重新初始化。
+var __xuyanLastUrl = location.href;
+setInterval(function () {
+  if (location.href !== __xuyanLastUrl) {
+    __xuyanLastUrl = location.href;
+    document.dispatchEvent(new CustomEvent('xuyan:page-switched'));
+  }
+}, 400);
 
 // ----------------------------------------------------------
 // 1. 打字机副标题
@@ -23,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
 function initTypewriter(scope) {
   var el = scope.querySelector('#typewriter');
   if (!el) return;
+  if (el.getAttribute('data-init')) return; // 防止重复启动打字机
+  el.setAttribute('data-init', '1');
   var phrase = '徐延个人网页，记录其生平の赛博传记';
   var charIndex = 0;
   var deleting = false;
@@ -57,6 +77,8 @@ function initTypewriter(scope) {
 function initParticles(scope) {
   var canvas = scope.querySelector('.particles-layer');
   if (!canvas) return;
+  if (canvas.getAttribute('data-init')) return; // 防止重复启动粒子动画
+  canvas.setAttribute('data-init', '1');
   var ctx = canvas.getContext('2d');
   var W = 0, H = 0;
   var parts = [];
@@ -88,6 +110,7 @@ function initParticles(scope) {
 
   function draw() {
     if (!running) return;
+    if (!canvas.isConnected) return; // 页面已被替换，停止旧动画
     ctx.clearRect(0, 0, W, H);
     var dark = isDark();
     var color = dark ? '150,170,255' : '63,81,181';
@@ -166,6 +189,8 @@ function initParticles(scope) {
 function initFloatingNames(scope) {
   var layer = scope.querySelector('.hero-names');
   if (!layer) return;
+  if (layer.getAttribute('data-init')) return; // 防止重复生成名牌
+  layer.setAttribute('data-init', '1');
   var names = [
     { text: '课程', href: 'course/' },
     { text: '随笔', href: 'essay/' },
@@ -203,6 +228,7 @@ function injectPageStats() {
   if (!article) return;
   if (article.querySelector('.hero-section')) return; // 主页不加
   if (article.querySelector('.notfound')) return; // 404 页不加
+  if (article.querySelector('.page-stats')) return; // 已注入过，防止重复
   var firstH1 = article.querySelector('h1');
   if (!firstH1) return;
 
