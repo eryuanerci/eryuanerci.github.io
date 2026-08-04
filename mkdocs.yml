@@ -6,6 +6,9 @@ theme:
   language: zh
   # 使用系统自带字体，避免下载国外字体导致打开变慢
   font: false
+  # 浏览器标签页小图标 + 顶栏左上角图标
+  favicon: assets/images/favicon.svg
+  logo: assets/images/favicon.svg
   # 浅色 / 深色两套皮肤，顶部出现切换按钮（夜间模式）
   palette:
     - media: "(prefers-color-scheme: light)"
