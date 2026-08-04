@@ -105,7 +105,7 @@
 
 [data-md-color-scheme="slate"] {
   --hero-name-bg: rgba(26, 30, 52, 0.92);
-  --hero-name-fg: #dfe4ff;
+  --hero-name-fg: #ffffff;
   --hero-name-shadow: rgba(0, 0, 0, 0.45);
   --hero-name-glow: rgba(120, 140, 255, 0.22);
   --hero-name-glow-strong: rgba(140, 160, 255, 0.42);
