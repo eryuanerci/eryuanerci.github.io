@@ -4,10 +4,41 @@ site_description: XuYan 的个人网站
 theme:
   name: material
   language: zh
+  # 使用系统自带字体，避免下载国外字体导致打开变慢
+  font: false
+  # 浅色 / 深色两套皮肤，顶部出现切换按钮（夜间模式）
   palette:
-    scheme: default  # 浅色（明亮）主题
-    primary: indigo
-    accent: indigo
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  features:
+    - navigation.instant    # 页面切换不整页刷新（即时加载）
+    - navigation.top        # 返回顶部按钮
+    - content.code.copy     # 代码块右上角复制按钮
+
+plugins:
+  - search
+  - tags:
+      tags_file: tags.md   # 文章标签，汇总到 tags.md 这个页面
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/eryuanerci
+
+extra_javascript:
+  - assets/js/stats.js    # 访问统计脚本
 
 nav:
   - 主页: index.md
