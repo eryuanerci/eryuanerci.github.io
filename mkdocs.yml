@@ -8,6 +8,7 @@ hooks:
 
 theme:
   name: material
+  custom_dir: docs/overrides   # 自定义模板目录（当前放 404 页面模板）
   language: zh
   # 使用系统自带字体，避免下载国外字体导致打开变慢
   font: false
