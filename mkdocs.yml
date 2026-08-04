@@ -39,6 +39,7 @@ extra:
 
 extra_javascript:
   - assets/js/stats.js    # 访问统计脚本
+  - assets/js/giscus.js   # 留言区脚本
 
 nav:
   - 主页: index.md
