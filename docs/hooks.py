@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """构建时钩子（MkDocs 自动调用）：
-1. 主页自动追加「最新文章」列表（按日期从新到旧，最多 3 篇）
-2. 文章页自动追加「上一篇 / 下一篇」导航
-3. 构建结束自动生成 sitemap.xml（供搜索引擎收录）
+1. 文章页自动追加「上一篇 / 下一篇」导航
+2. 构建结束自动生成 sitemap.xml（供搜索引擎收录）
 以后每写一篇新文章（随笔/课程），这些都会自动更新，不需要手动维护。
 """
 import os
@@ -87,25 +86,9 @@ def _src_to_url(src_uri, config):
 
 def on_page_markdown(markdown, page, config, files, **kwargs):
     src = page.file.src_uri
-    if src == "index.md":
-        return _inject_latest_posts(markdown, files, config)
     if (src.startswith("essay/") or src.startswith("course/")) and not src.endswith("index.md"):
         return _inject_prev_next(markdown, page, files, config)
     return markdown
-
-
-def _inject_latest_posts(markdown, files, config):
-    posts = _collect_posts(files, config)[:3]
-    if not posts:
-        return markdown
-    lines = ["", '<section class="home-latest">', "", "## 最新文章", ""]
-    for p in posts:
-        date = p["date"]
-        date_part = date + " · " if date else ""
-        lines.append("- {d}[{t}]({u})".format(
-            d=date_part, t=p["title"], u=_src_to_url(p["uri"], config)))
-    lines += ["", "</section>", ""]
-    return markdown.rstrip() + "\n" + "\n".join(lines)
 
 
 def _inject_prev_next(markdown, page, files, config):

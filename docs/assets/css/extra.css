@@ -73,13 +73,13 @@
   position: absolute;
   pointer-events: auto;
   padding: 0.45rem 1.15rem;
-  border-radius: 999px;
+  border-radius: 14px;
   font-size: 0.95rem;
   text-decoration: none !important;
-  border: 1px solid var(--hero-name-border);
+  border: none;
   background: var(--hero-name-bg);
   color: var(--hero-name-fg);
-  box-shadow: 0 0 20px var(--hero-name-glow);
+  box-shadow: 0 2px 10px var(--hero-name-shadow), 0 0 20px var(--hero-name-glow);
   animation: nameFloat 7s ease-in-out infinite;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -96,19 +96,19 @@
 
 /* 深浅色模式的颜色变量 */
 :root {
-  --hero-name-bg: rgba(255, 255, 255, 0.72);
-  --hero-name-border: rgba(63, 81, 181, 0.35);
+  --hero-name-bg: rgba(255, 255, 255, 0.5);
   --hero-name-fg: #3f51b5;
-  --hero-name-glow: rgba(63, 81, 181, 0.18);
-  --hero-name-glow-strong: rgba(63, 81, 181, 0.38);
+  --hero-name-shadow: rgba(63, 81, 181, 0.14);
+  --hero-name-glow: rgba(63, 81, 181, 0.15);
+  --hero-name-glow-strong: rgba(63, 81, 181, 0.3);
 }
 
 [data-md-color-scheme="slate"] {
-  --hero-name-bg: rgba(30, 33, 58, 0.75);
-  --hero-name-border: rgba(150, 170, 255, 0.4);
+  --hero-name-bg: rgba(30, 33, 58, 0.55);
   --hero-name-fg: #aab4ff;
-  --hero-name-glow: rgba(120, 140, 255, 0.22);
-  --hero-name-glow-strong: rgba(140, 160, 255, 0.42);
+  --hero-name-shadow: rgba(0, 0, 0, 0.35);
+  --hero-name-glow: rgba(120, 140, 255, 0.18);
+  --hero-name-glow-strong: rgba(140, 160, 255, 0.36);
 }
 
 /* 文章统计行（extra.js 注入到标题下方） */
@@ -132,22 +132,6 @@
 /* 左侧导航栏：放大栏目文字，方便阅读 */
 .md-nav__link {
   font-size: 1.05rem;
-}
-
-/* 主页「最新文章」区（构建钩子自动生成） */
-.home-latest {
-  max-width: 44rem;
-  margin: 0 auto;
-  padding: 2.5rem 1rem 4rem;
-}
-
-.home-latest ul {
-  padding-left: 1.2rem;
-}
-
-.home-latest li {
-  margin: 0.55rem 0;
-  font-size: 1.02rem;
 }
 
 /* 文章底部「上一篇 / 下一篇」导航（构建钩子自动生成） */
@@ -215,13 +199,16 @@ body::before {
   pointer-events: none;
 }
 
-/* 可读性遮罩层：保证正文文字清晰，同时透出壁纸氛围 */
+/* 可读性遮罩层：径向渐变——屏幕中央更透、四周柔和加深，
+   既保证正文清晰，又露出壁纸主体，避免「平涂白块」的生硬感 */
 :root {
-  --wallpaper-overlay: rgba(255, 255, 255, 0.72);
+  --wallpaper-overlay-center: rgba(255, 255, 255, 0.40);
+  --wallpaper-overlay-edge: rgba(255, 255, 255, 0.60);
 }
 
 [data-md-color-scheme="slate"] {
-  --wallpaper-overlay: rgba(15, 20, 40, 0.85);
+  --wallpaper-overlay-center: rgba(15, 20, 40, 0.52);
+  --wallpaper-overlay-edge: rgba(15, 20, 40, 0.72);
 }
 
 body::after {
@@ -229,7 +216,9 @@ body::after {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: var(--wallpaper-overlay);
+  background: radial-gradient(ellipse at center,
+    var(--wallpaper-overlay-center) 0%,
+    var(--wallpaper-overlay-edge) 100%);
   pointer-events: none;
 }
 
