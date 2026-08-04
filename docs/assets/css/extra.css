@@ -201,6 +201,38 @@
   text-underline-offset: 2px;
 }
 
+/* ================= 全站壁纸 ================= */
+/* 壁纸层：固定在屏幕最底层，不影响任何点击与滚动 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url("../images/wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* 可读性遮罩层：保证正文文字清晰，同时透出壁纸氛围 */
+:root {
+  --wallpaper-overlay: rgba(255, 255, 255, 0.72);
+}
+
+[data-md-color-scheme="slate"] {
+  --wallpaper-overlay: rgba(15, 20, 40, 0.85);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--wallpaper-overlay);
+  pointer-events: none;
+}
+
 /* 尊重「减少动态效果」系统设置 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
