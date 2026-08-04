@@ -2,3 +2,5 @@
 site/
 __pycache__/
 .bitfun/
+# Obsidian 打开此文件夹作为库时生成的配置文件
+.obsidian/
