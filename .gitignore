@@ -1,0 +1,3 @@
+# 自动生成的构建产物，不需要上传到 GitHub
+site/
+__pycache__/

@@ -1,0 +1,16 @@
+site_name: XuYan
+site_description: XuYan 的个人网站
+
+theme:
+  name: material
+  language: zh
+  palette:
+    scheme: default  # 浅色（明亮）主题
+    primary: indigo
+    accent: indigo
+
+nav:
+  - 主页: index.md
+  - 课程: course/index.md
+  - 友链: friends/index.md
+  - 关于: about/index.md

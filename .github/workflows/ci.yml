@@ -1,0 +1,29 @@
+name: ci
+
+# 每次把代码推送到 main 分支时，自动执行下面的任务
+on:
+  push:
+    branches:
+      - main
+
+# 允许工作流把内容写入仓库（用于发布到 gh-pages 分支）
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 把代码下载到服务器
+      - uses: actions/checkout@v4
+
+      # 2. 安装 Python
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      # 3. 安装网站生成工具
+      - run: pip install mkdocs-material
+
+      # 4. 生成网站并发布到 gh-pages 分支
+      - run: mkdocs gh-deploy --force
