@@ -1,0 +1,138 @@
+/* ============================================================
+   XuYan 自定义样式 —— 粒子海流主页
+   ============================================================ */
+
+/* 主页 Hero：占满内容区、居中 */
+.md-main__inner:has(.hero-section) {
+  margin-top: 0;
+  max-width: none;
+}
+
+.md-content__inner:has(> .hero-section) {
+  margin: 0;
+  padding: 0;
+}
+
+.hero-section {
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 粒子画布：铺满 hero、不拦截点击 */
+.particles-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 中央内容 */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+  min-height: 1.8em;
+  color: var(--md-default-fg-color--light);
+}
+
+.type-cursor {
+  animation: cursorBlink 1s steps(1) infinite;
+}
+
+@keyframes cursorBlink {
+  50% { opacity: 0; }
+}
+
+/* 动态名牌入口：漂浮发光胶囊 */
+.hero-names {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-name {
+  position: absolute;
+  pointer-events: auto;
+  padding: 0.45rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  text-decoration: none !important;
+  border: 1px solid var(--hero-name-border);
+  background: var(--hero-name-bg);
+  color: var(--hero-name-fg);
+  box-shadow: 0 0 20px var(--hero-name-glow);
+  animation: nameFloat 7s ease-in-out infinite;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-name:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 0 30px var(--hero-name-glow-strong);
+}
+
+@keyframes nameFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 深浅色模式的颜色变量 */
+:root {
+  --hero-name-bg: rgba(255, 255, 255, 0.72);
+  --hero-name-border: rgba(63, 81, 181, 0.35);
+  --hero-name-fg: #3f51b5;
+  --hero-name-glow: rgba(63, 81, 181, 0.18);
+  --hero-name-glow-strong: rgba(63, 81, 181, 0.38);
+}
+
+[data-md-color-scheme="slate"] {
+  --hero-name-bg: rgba(30, 33, 58, 0.75);
+  --hero-name-border: rgba(150, 170, 255, 0.4);
+  --hero-name-fg: #aab4ff;
+  --hero-name-glow: rgba(120, 140, 255, 0.22);
+  --hero-name-glow-strong: rgba(140, 160, 255, 0.42);
+}
+
+/* 文章统计行（extra.js 注入到标题下方） */
+.page-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 0.2rem 0 1.6rem;
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+  opacity: 0.9;
+}
+
+.page-stats-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+/* 尊重「减少动态效果」系统设置 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

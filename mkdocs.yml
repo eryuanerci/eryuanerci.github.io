@@ -40,9 +40,13 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/eryuanerci
 
+extra_css:
+  - assets/css/extra.css  # 主页粒子动效、名牌、文章统计的样式
+
 extra_javascript:
   - assets/js/stats.js    # 访问统计脚本
   - assets/js/giscus.js   # 留言区脚本
+  - assets/js/extra.js    # 主页动效脚本（打字机、粒子、名牌、文章统计）
 
 nav:
   - 主页: index.md
