@@ -199,27 +199,59 @@ body::before {
   pointer-events: none;
 }
 
-/* 可读性遮罩层：径向渐变——屏幕中央更透、四周柔和加深，
-   既保证正文清晰，又露出壁纸主体，避免「平涂白块」的生硬感 */
+/* ================= 毛玻璃阅读卡片 =================
+   去掉整屏遮罩，改为给「文字所在区域」套一层柔和磨砂玻璃：
+   内容区、左右侧边栏、主页名牌区各自独立成卡片，四周壁纸完全露出。 */
 :root {
-  --wallpaper-overlay-center: rgba(255, 255, 255, 0.40);
-  --wallpaper-overlay-edge: rgba(255, 255, 255, 0.60);
+  --content-glass-bg: rgba(255, 255, 255, 0.55);
+  --content-glass-shadow: rgba(31, 45, 105, 0.12);
 }
 
 [data-md-color-scheme="slate"] {
-  --wallpaper-overlay-center: rgba(15, 20, 40, 0.52);
-  --wallpaper-overlay-edge: rgba(15, 20, 40, 0.72);
+  --content-glass-bg: rgba(15, 20, 40, 0.62);
+  --content-glass-shadow: rgba(0, 0, 0, 0.35);
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(ellipse at center,
-    var(--wallpaper-overlay-center) 0%,
-    var(--wallpaper-overlay-edge) 100%);
-  pointer-events: none;
+/* 正文阅读区（主页 hero 除外） */
+.md-content__inner:not(:has(.hero-section)) {
+  background: var(--content-glass-bg);
+  border-radius: 18px;
+  padding: 1.6rem 1.8rem;
+  margin: 1.2rem 0.8rem 2rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 24px var(--content-glass-shadow);
+}
+
+/* 右侧「目录」栏 */
+.md-sidebar--secondary .md-nav {
+  background: var(--content-glass-bg);
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 24px var(--content-glass-shadow);
+}
+
+/* 左侧导航栏 */
+.md-sidebar--primary .md-nav {
+  background: var(--content-glass-bg);
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 24px var(--content-glass-shadow);
+}
+
+/* 主页名牌区（XuYan 底下） */
+.hero-content {
+  background: var(--content-glass-bg);
+  border-radius: 24px;
+  padding: 2.2rem 3rem;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 32px var(--content-glass-shadow);
+  max-width: 92%;
 }
 
 /* 尊重「减少动态效果」系统设置 */
