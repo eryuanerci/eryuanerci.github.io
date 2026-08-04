@@ -1,5 +1,10 @@
 site_name: XuYan
 site_description: XuYan 的个人网站
+site_url: https://eryuanerci.github.io/   # 网站地址（用于生成站点地图 sitemap）
+
+# 构建钩子：自动生成「最新文章」「上一篇/下一篇」和 sitemap.xml
+hooks:
+  - docs/hooks.py
 
 theme:
   name: material

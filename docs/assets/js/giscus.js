@@ -17,6 +17,7 @@
     // 在每页正文末尾追加留言区
     var content = document.querySelector(".md-content__inner");
     if (!content) return;
+    if (content.querySelector(".notfound")) return; // 404 页不加留言区
 
     var container = document.createElement("div");
     container.style.marginTop = "40px";

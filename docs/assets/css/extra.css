@@ -134,6 +134,73 @@
   font-size: 1.05rem;
 }
 
+/* 主页「最新文章」区（构建钩子自动生成） */
+.home-latest {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+}
+
+.home-latest ul {
+  padding-left: 1.2rem;
+}
+
+.home-latest li {
+  margin: 0.55rem 0;
+  font-size: 1.02rem;
+}
+
+/* 文章底部「上一篇 / 下一篇」导航（构建钩子自动生成） */
+.page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin: 2.5rem 0 0.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.page-nav-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-nav-item span {
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.2rem;
+}
+
+.page-nav-next {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* 404 页面：居中大字 + 返回主页 */
+.notfound {
+  text-align: center;
+  padding: 4rem 1rem 5rem;
+}
+
+.notfound h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 页脚自定义信息行（extra.js 注入） */
+.md-footer-custom {
+  padding: 0.6rem 1rem 1.2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--md-footer-fg-color--light);
+}
+
+.md-footer-custom a {
+  color: var(--md-footer-fg-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* 尊重「减少动态效果」系统设置 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

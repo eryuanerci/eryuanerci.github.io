@@ -4,6 +4,7 @@
 // 2. 粒子海流背景（Canvas，鼠标轻微交互）
 // 3. 动态名牌入口（漂浮，可点击）
 // 4. 文章统计（字数 / 代码行 / 图片数 / 阅读时长）
+// 5. 页脚自定义信息行（版权 / 建站时间 / 站点地图入口）
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
   var hero = document.querySelector('.hero-section');
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initFloatingNames(hero);
   }
   injectPageStats();
+  injectFooter();
 });
 
 // ----------------------------------------------------------
@@ -200,6 +202,7 @@ function injectPageStats() {
   var article = document.querySelector('.md-content__inner');
   if (!article) return;
   if (article.querySelector('.hero-section')) return; // 主页不加
+  if (article.querySelector('.notfound')) return; // 404 页不加
   var firstH1 = article.querySelector('h1');
   if (!firstH1) return;
 
@@ -235,4 +238,25 @@ function injectPageStats() {
     return '<span class="page-stats-item">' + s + '</span>';
   }).join('');
   firstH1.insertAdjacentElement('afterend', stats);
+}
+
+// ----------------------------------------------------------
+// 5. 页脚信息行：版权 / 建站时间 / 站点地图入口
+// ----------------------------------------------------------
+function injectFooter() {
+  var footer = document.querySelector('.md-footer');
+  if (!footer) return;
+  if (footer.querySelector('.md-footer-custom')) return;
+
+  var bar = document.createElement('div');
+  bar.className = 'md-footer-custom';
+  bar.innerHTML = '© 2026 XuYan 徐延 · 建站于 2026 年 8 月 · ' +
+    '<a href="/sitemap.xml">站点地图</a> · 由 MkDocs + Material 驱动';
+
+  var meta = document.querySelector('.md-footer-meta');
+  if (meta) {
+    meta.appendChild(bar);
+  } else {
+    footer.appendChild(bar);
+  }
 }
