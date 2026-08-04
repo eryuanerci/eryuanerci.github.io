@@ -129,6 +129,11 @@
   white-space: nowrap;
 }
 
+/* 左侧导航栏：放大栏目文字，方便阅读 */
+.md-nav__link {
+  font-size: 1.05rem;
+}
+
 /* 尊重「减少动态效果」系统设置 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
