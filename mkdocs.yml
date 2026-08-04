@@ -47,6 +47,7 @@ extra_javascript:
 nav:
   - 主页: index.md
   - 课程: course/index.md
+  - 随笔: essay/index.md
   - 日记: diary/index.md
   - 友链: friends/index.md
   - 关于: about/index.md
