@@ -203,6 +203,7 @@ function initFloatingNames(scope) {
   var names = [
     { text: '课程', href: 'course/' },
     { text: '随笔', href: 'essay/' },
+    { text: '资源', href: 'resource/' },
     { text: '友链', href: 'friends/' },
     { text: '关于', href: 'about/' }
   ];

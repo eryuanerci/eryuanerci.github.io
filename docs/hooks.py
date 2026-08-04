@@ -54,7 +54,7 @@ def _collect_posts(files, config):
         uri = f.src_uri
         if not uri.endswith(".md"):
             continue
-        if not (uri.startswith("essay/") or uri.startswith("course/")):
+        if not (uri.startswith("essay/") or uri.startswith("course/") or uri.startswith("resource/")):
             continue
         if uri.endswith("index.md"):
             continue
@@ -86,7 +86,7 @@ def _src_to_url(src_uri, config):
 
 def on_page_markdown(markdown, page, config, files, **kwargs):
     src = page.file.src_uri
-    if (src.startswith("essay/") or src.startswith("course/")) and not src.endswith("index.md"):
+    if (src.startswith("essay/") or src.startswith("course/") or src.startswith("resource/")) and not src.endswith("index.md"):
         return _inject_prev_next(markdown, page, files, config)
     return markdown
 
