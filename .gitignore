@@ -4,3 +4,5 @@ __pycache__/
 .bitfun/
 # Obsidian 打开此文件夹作为库时生成的配置文件
 .obsidian/
+# Word 文档打开时生成的临时文件（以 ~$ 开头）
+~$*

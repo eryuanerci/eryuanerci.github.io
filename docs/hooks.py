@@ -47,8 +47,12 @@ def _extract_h1(src_path):
     return None
 
 
-def _collect_posts(files, config):
-    """收集 essay/ 与 course/ 下的文章，按 date 从新到旧排序。"""
+def _collect_posts(files, config, prefix=None):
+    """收集某个板块（essay/ course/ resource/）下的文章，按 date 从旧到新排序。
+
+    prefix 传 "essay/" 等目录前缀时只收集该板块的文章，
+    这样「上一篇/下一篇」只会在同一板块内部衔接，不会串到别的板块。
+    """
     posts = []
     for f in files.documentation_pages():
         uri = f.src_uri
@@ -58,14 +62,16 @@ def _collect_posts(files, config):
             continue
         if uri.endswith("index.md"):
             continue
+        if prefix and not uri.startswith(prefix):
+            continue
         meta = _read_meta(f.abs_src_path)
         posts.append({
             "uri": uri,
             "title": meta.get("title") or _extract_h1(f.abs_src_path) or "未命名",
             "date": str(meta.get("date", "") or ""),
         })
-    # 有日期的按日期降序（新的在前），没日期的排最后
-    posts.sort(key=lambda p: p["date"], reverse=True)
+    # 日期从旧到新（最早发的在最前），没日期的排最后；同日期按文件名排，保证顺序稳定
+    posts.sort(key=lambda p: (p["date"] == "", p["date"], p["uri"]))
     return posts
 
 
@@ -92,21 +98,28 @@ def on_page_markdown(markdown, page, config, files, **kwargs):
 
 
 def _inject_prev_next(markdown, page, files, config):
-    posts = _collect_posts(files, config)
+    src = page.file.src_uri
+    # 确定当前文章属于哪个板块，上一篇/下一篇只在该板块内部衔接
+    prefix = None
+    for pfx in ("essay/", "course/", "resource/"):
+        if src.startswith(pfx):
+            prefix = pfx
+            break
+    posts = _collect_posts(files, config, prefix)
     uris = [p["uri"] for p in posts]
-    cur = page.file.src_uri
+    cur = src
     if cur not in uris:
         return markdown
     idx = uris.index(cur)
-    newer = posts[idx - 1] if idx - 1 >= 0 else None   # 更新的（上一篇）
-    older = posts[idx + 1] if idx + 1 < len(posts) else None  # 更旧的（下一篇）
-    if not newer and not older:
+    prev = posts[idx - 1] if idx - 1 >= 0 else None      # 上一篇：更早发布的
+    older = posts[idx + 1] if idx + 1 < len(posts) else None  # 下一篇：更晚发布的
+    if not prev and not older:
         return markdown
     lines = ["", '<nav class="page-nav">']
-    if newer:
+    if prev:
         lines.append('<div class="page-nav-item page-nav-prev"><span>上一篇</span>'
                      '<a href="{u}">{t}</a></div>'.format(
-                         u=_src_to_url(newer["uri"], config), t=newer["title"]))
+                         u=_src_to_url(prev["uri"], config), t=prev["title"]))
     if older:
         lines.append('<div class="page-nav-item page-nav-next"><span>下一篇</span>'
                      '<a href="{u}">{t}</a></div>'.format(
