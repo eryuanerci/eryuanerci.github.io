@@ -1,10 +1,10 @@
 ---
-title: 老登资源站
-
 tags:
   - 游戏
+title: 老登资源站
 date: 2026-08-05
----# 老登资源站
+---
+老登资源站
 
 [老登资源站 · TGA年度最佳](https://www.ldzyz.com/tga/)
 
