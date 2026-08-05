@@ -1,0 +1,278 @@
+/* ============================================================
+   XuYan 自定义样式 —— 粒子海流主页
+   ============================================================ */
+
+/* 主页 Hero：占满内容区、居中 */
+.md-main__inner:has(.hero-section) {
+  margin-top: 0;
+  max-width: none;
+}
+
+.md-content__inner:has(> .hero-section) {
+  margin: 0;
+  padding: 0;
+}
+
+.hero-section {
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 粒子画布：铺满 hero、不拦截点击 */
+.particles-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 中央内容 */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+  min-height: 1.8em;
+  color: var(--md-default-fg-color--light);
+}
+
+.type-cursor {
+  animation: cursorBlink 1s steps(1) infinite;
+}
+
+@keyframes cursorBlink {
+  50% { opacity: 0; }
+}
+
+/* 动态名牌入口：漂浮发光胶囊 */
+.hero-names {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-name {
+  position: absolute;
+  pointer-events: auto;
+  padding: 0.45rem 1.15rem;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  text-decoration: none !important;
+  border: none;
+  background: var(--hero-name-bg);
+  color: var(--hero-name-fg);
+  box-shadow: 0 2px 10px var(--hero-name-shadow), 0 0 20px var(--hero-name-glow);
+  animation: nameFloat 7s ease-in-out infinite;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-name:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 0 30px var(--hero-name-glow-strong);
+}
+
+@keyframes nameFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 深浅色模式的颜色变量 */
+:root {
+  --hero-name-bg: rgba(255, 255, 255, 0.5);
+  --hero-name-fg: #3f51b5;
+  --hero-name-shadow: rgba(63, 81, 181, 0.14);
+  --hero-name-glow: rgba(63, 81, 181, 0.15);
+  --hero-name-glow-strong: rgba(63, 81, 181, 0.3);
+}
+
+[data-md-color-scheme="slate"] {
+  --hero-name-bg: rgba(26, 30, 52, 0.92);
+  --hero-name-fg: #ffffff;
+  --hero-name-shadow: rgba(0, 0, 0, 0.45);
+  --hero-name-glow: rgba(120, 140, 255, 0.22);
+  --hero-name-glow-strong: rgba(140, 160, 255, 0.42);
+}
+
+/* 夜间模式：主页标题/副标题加文字阴影，保证叠在亮壁纸上也清晰 */
+[data-md-color-scheme="slate"] .hero-title,
+[data-md-color-scheme="slate"] .hero-subtitle {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* 文章统计行（extra.js 注入到标题下方） */
+.page-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 0.2rem 0 1.6rem;
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+  opacity: 0.9;
+}
+
+.page-stats-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+/* 左侧导航栏：放大栏目文字，方便阅读 */
+.md-nav__link {
+  font-size: 1.05rem;
+}
+
+/* 文章底部「上一篇 / 下一篇」导航（构建钩子自动生成） */.page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin: 2.5rem 0 0.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.page-nav-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 赞助页收款码：限宽、圆角、居中、柔和投影 */
+.sponsor-qr {
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  margin: 0.8rem auto 0.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px var(--content-glass-shadow);
+}
+
+.page-nav-item span {
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.2rem;
+}
+
+.page-nav-next {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* 404 页面：居中大字 + 返回主页 */
+.notfound {
+  text-align: center;
+  padding: 4rem 1rem 5rem;
+}
+
+.notfound h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 页脚自定义信息行（extra.js 注入） */
+.md-footer-custom {
+  padding: 0.6rem 1rem 1.2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--md-footer-fg-color--light);
+}
+
+.md-footer-custom a {
+  color: var(--md-footer-fg-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ================= 全站壁纸 ================= */
+/* 壁纸层：固定在屏幕最底层，不影响任何点击与滚动 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url("../images/wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* ================= 毛玻璃阅读卡片 =================
+   去掉整屏遮罩，改为给「文字所在区域」套一层柔和磨砂玻璃：
+   内容区、左右侧边栏、主页名牌区各自独立成卡片，四周壁纸完全露出。 */
+:root {
+  --content-glass-bg: rgba(255, 255, 255, 0.38);
+  --content-glass-shadow: rgba(31, 45, 105, 0.10);
+}
+
+[data-md-color-scheme="slate"] {
+  --content-glass-bg: rgba(15, 20, 40, 0.5);
+  --content-glass-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* 正文阅读区（主页 hero 除外） */
+.md-content__inner:not(:has(.hero-section)) {
+  background: var(--content-glass-bg);
+  border-radius: 18px;
+  padding: 1.6rem 1.8rem;
+  margin: 1.2rem 0.8rem 2rem;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 24px var(--content-glass-shadow);
+}
+
+/* 右侧「目录」栏 */
+.md-sidebar--secondary .md-nav {
+  background: var(--content-glass-bg);
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 24px var(--content-glass-shadow);
+}
+
+/* 左侧导航栏 */
+.md-sidebar--primary .md-nav {
+  background: var(--content-glass-bg);
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 24px var(--content-glass-shadow);
+}
+
+/* 主页名牌区（XuYan 底下） */
+.hero-content {
+  background: var(--content-glass-bg);
+  border-radius: 24px;
+  padding: 2.2rem 3rem;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 32px var(--content-glass-shadow);
+  max-width: 92%;
+}
+
+/* 尊重「减少动态效果」系统设置 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
