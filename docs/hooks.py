@@ -5,6 +5,7 @@
 以后每写一篇新文章（随笔/课程），这些都会自动更新，不需要手动维护。
 """
 import os
+import re
 
 import yaml
 
@@ -47,12 +48,36 @@ def _extract_h1(src_path):
     return None
 
 
-def _collect_posts(files, config, prefix=None):
-    """收集某个板块（essay/ course/ resource/）下的文章，按 date 从旧到新排序。
+def _read_list_order(prefix):
+    """读取板块首页（index.md）里的文章列表顺序。
 
-    prefix 传 "essay/" 等目录前缀时只收集该板块的文章，
-    这样「上一篇/下一篇」只会在同一板块内部衔接，不会串到别的板块。
+    例：course/index.md 里按顺序写了 `- [标题](文章名.md)`，
+    就按这个顺序返回 ["course/文章名.md", ...]，作为「上一篇/下一篇」的依据。
     """
+    order = []
+    index_path = os.path.join("docs", prefix, "index.md")
+    try:
+        with open(index_path, encoding="utf-8") as fh:
+            text = fh.read()
+    except OSError:
+        return order
+    for m in re.finditer(r"\]\(([^)]+\.md)\)", text):
+        link = m.group(1).strip()
+        if link.startswith("http"):
+            continue
+        link = link.lstrip("./")
+        order.append(prefix + link)
+    return order
+
+
+def _collect_posts(files, config, prefix=None):
+    """收集某个板块（essay/ course/ resource/）下的文章。
+
+    排序规则：优先按板块首页 index.md 里的列表顺序（用户手动排好的），
+    没有出现在列表里的文章追加到最后面（按日期从旧到新）。
+    """
+    order = _read_list_order(prefix) if prefix else []
+    index_map = {uri: i for i, uri in enumerate(order)}
     posts = []
     for f in files.documentation_pages():
         uri = f.src_uri
@@ -70,8 +95,14 @@ def _collect_posts(files, config, prefix=None):
             "title": meta.get("title") or _extract_h1(f.abs_src_path) or "未命名",
             "date": str(meta.get("date", "") or ""),
         })
-    # 日期从旧到新（最早发的在最前），没日期的排最后；同日期按文件名排，保证顺序稳定
-    posts.sort(key=lambda p: (p["date"] == "", p["date"], p["uri"]))
+    if index_map:
+        # 列表里的按列表顺序；列表外的排最后（按日期升序）
+        posts.sort(key=lambda p: (p["uri"] not in index_map,
+                                  index_map.get(p["uri"], 10**9),
+                                  p["date"], p["uri"]))
+    else:
+        # 没有列表时：日期从旧到新，没日期的排最后；同日期按文件名排
+        posts.sort(key=lambda p: (p["date"] == "", p["date"], p["uri"]))
     return posts
 
 
