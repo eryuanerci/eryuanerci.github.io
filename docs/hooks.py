@@ -6,6 +6,7 @@
 """
 import os
 import re
+from posixpath import relpath as _relpath
 
 import yaml
 
@@ -106,19 +107,56 @@ def _collect_posts(files, config, prefix=None):
     return posts
 
 
-def _src_to_url(src_uri, config):
-    """把 docs 下的 .md 路径转成站点相对 URL（如 essay/first.md -> essay/first/）。"""
+def _relative_from(url, cur_pos):
+    """纯字符串计算：从 cur_pos（站点根相对目录）出发到 url 的相对路径。
+
+    例：url="course/course-example/"，cur_pos="course/微积分甲上下"
+    → 返回 "../course-example/"
+    """
+    t = url.rstrip("/").split("/") if url else []
+    c = cur_pos.split("/") if cur_pos else []
+    i = 0
+    while i < len(t) and i < len(c) and t[i] == c[i]:
+        i += 1
+    ups = [".."] * (len(c) - i)
+    parts = ups + t[i:]
+    if not parts:
+        return "./"
+    return "/".join(parts) + "/"
+
+
+def _src_to_url(src_uri, config, current_uri=None):
+    """把文章 src_uri 转成链接。
+
+    current_uri 为空（sitemap 用）时返回站点根相对 URL（course/xxx/）；
+    给定时返回「从当前页面出发」的相对链接（../xxx/），
+    否则浏览器会把链接拼到当前页面的目录下导致 404。
+    """
     use_dir = config.get("use_directory_urls", True)
     base = src_uri[:-3] if src_uri.endswith(".md") else src_uri
     if use_dir:
-        if base == "index":
-            return "./"
         if base.endswith("/index"):
             base = base[:-6]
-        return base + "/"
-    if base == "index":
-        return "./"
-    return base + ".html"
+        elif base == "index":
+            base = ""
+        url = base + "/"
+    else:
+        url = base + ".html"
+    url = url.lstrip("./")
+    if current_uri is None:
+        return url
+    # 当前页面在站点中的位置（目录模式：文章页位置就是 板块/文章名）
+    cur_base = current_uri[:-3] if current_uri.endswith(".md") else current_uri
+    if use_dir:
+        if cur_base.endswith("/index") or cur_base == "index":
+            cur_pos = os.path.dirname(cur_base).replace("\\", "/")
+            cur_pos = cur_pos.strip("/")
+        else:
+            cur_pos = cur_base
+    else:
+        cur_pos = os.path.dirname(cur_base).replace("\\", "/")
+        cur_pos = cur_pos.strip("/")
+    return _relative_from(url, cur_pos)
 
 
 def on_page_markdown(markdown, page, config, files, **kwargs):
@@ -150,11 +188,11 @@ def _inject_prev_next(markdown, page, files, config):
     if prev:
         lines.append('<div class="page-nav-item page-nav-prev"><span>上一篇</span>'
                      '<a href="{u}">{t}</a></div>'.format(
-                         u=_src_to_url(prev["uri"], config), t=prev["title"]))
+                         u=_src_to_url(prev["uri"], config, src), t=prev["title"]))
     if older:
         lines.append('<div class="page-nav-item page-nav-next"><span>下一篇</span>'
                      '<a href="{u}">{t}</a></div>'.format(
-                         u=_src_to_url(older["uri"], config), t=older["title"]))
+                         u=_src_to_url(older["uri"], config, src), t=older["title"]))
     lines.append("</nav>")
     return markdown.rstrip() + "\n" + "\n".join(lines) + "\n"
 
